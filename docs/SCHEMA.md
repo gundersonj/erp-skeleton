@@ -29,7 +29,7 @@ Deletion rules (important):
 
 ## Entity Relationship Diagram (logical)
 
-```
+```text
 CUSTOMER (customers_customer)
   1 --------< ORDER (orders_order)
                1 --------< ORDER_ITEM (orders_orderitem) >-------- 1 PRODUCT (products_product)
