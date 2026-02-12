@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Orders</h2>
+    <a class="button" href="{% url 'orders:create' %}">New Order</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Customer</th><th>Status</th><th>Date</th><th>Subtotal</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for o in orders %}
+        <tr>
+          <td>{{ o.id }}</td>
+          <td>{{ o.customer }}</td>
+          <td>{{ o.status }}</td>
+          <td>{{ o.order_date }}</td>
+          <td>${{ o.subtotal }}</td>
+            <a href="{% url 'orders:detail' o.pk %}">Open</a> |
+            <a href="{% url 'orders:delete' o.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">No orders yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

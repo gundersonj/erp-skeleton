@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Order #{{ order.id }}</h2>
+    <div>
+      <a href="{% url 'orders:list' %}">Back</a> |
+      <a href="{% url 'orders:delete' order.pk %}">Delete</a>
+    </div>
+  </div>
+
+  <p>
+    <strong>Customer:</strong> {{ order.customer }}<br/>
+    <strong>Status:</strong> {{ order.status }}<br/>
+    <strong>Date:</strong> {{ order.order_date }}
+  </p>
+
+  <h3>Line Items</h3>
+
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Unit Price</th>
+        <th>Line Total</th>
+        <th>Delete?</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in formset.forms %}
+        <tr>
+          <td>
+            {{ f.id }}
+            {{ f.product }}
+            {% if f.product.errors %}<div>{{ f.product.errors }}</div>{% endif %}
+          </td>
+          <td>
+            {{ f.quantity }}
+            {% if f.quantity.errors %}<div>{{ f.quantity.errors }}</div>{% endif %}
+          </td>
+          <td>
+            {{ f.unit_price }}
+            {% if f.unit_price.errors %}<div>{{ f.unit_price.errors }}</div>{% endif %}
+          </td>
+
+          <!-- line total: only shows for existing rows (saved items) -->
+          <td>
+            {% if f.instance.pk %}
+              {{ f.instance.line_total }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+
+          <td>{{ f.DELETE }}</td>
+        </tr>
+        {% if f.non_field_errors %}
+          <tr><td colspan="5">{{ f.non_field_errors }}</td></tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <button type="submit">Save Items</button>
+</form>
+
+<hr/>
+
+<h3>Summary</h3>
+<p>
+<strong>Total Qty:</strong> {{ order.total_items }}<br/>
+<strong>Subtotal:</strong> {{ order.subtotal }}
+</p>
+
+{% endblock %}

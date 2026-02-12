@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Customers</h2>
+    <a class="button" href="{% url 'customers:create' %}">New Customer</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for c in customers %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>{{ c.email|default:"" }}</td>
+          <td>{{ c.phone|default:"" }}</td>
+          <td>
+            <a href="{% url 'customers:update' c.pk %}">Edit</a> |
+            <a href="{% url 'customers:delete' c.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">No customers yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

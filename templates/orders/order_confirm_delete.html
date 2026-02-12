@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Delete Order</h2>
+  <p>Delete Order #{{ object.id }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+    <a href="{% url 'orders:detail' object.pk %}">Cancel</a>
+  </form>
+{% endblock %}

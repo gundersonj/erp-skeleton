@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>Products</h2>
+    <a class="button" href="{% url 'products:create' %}">New Product</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Sku</th><th>Name</th><th>Price</th><th>Is Active</th></tr>
+    </thead>
+    <tbody>
+      {% for p in products %}
+        <tr>
+          <td>{{ p.sku }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.price }}</td>
+          <td>{{ p.is_active }}</td>
+          <td>
+            <a href="{% url 'products:update' p.pk %}">Edit</a> |
+            <a href="{% url 'products:delete' p.pk %}">Delete</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5">No products yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
