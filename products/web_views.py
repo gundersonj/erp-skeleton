@@ -1,7 +1,14 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
 from .models import Product
 from .forms import ProductForm
+
+def product_price(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return JsonResponse({"price": str(product.price)})
 
 class ProductListView(ListView):
     model = Product
@@ -25,3 +32,5 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = "products/product_confirm_delete.html"
     success_url = reverse_lazy("products:list")
+    
+    

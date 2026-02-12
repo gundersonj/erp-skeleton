@@ -7,22 +7,22 @@
 
   <table>
     <thead>
-      <tr><th>ID</th><th>Customer</th><th>Status</th><th>Date</th><th>Subtotal</th><th></th></tr>
+      <tr><th>ID</th><th>Customer</th><th>Status</th><th>Date</th><th>Subtotal</th><th>Delete</th></tr>
     </thead>
     <tbody>
       {% for o in orders %}
         <tr>
-          <td>{{ o.id }}</td>
+          <td><a href="{% url 'orders:detail' o.pk %}">{{ o.id }}</a></td>
           <td>{{ o.customer }}</td>
           <td>{{ o.status }}</td>
           <td>{{ o.order_date }}</td>
           <td>${{ o.subtotal }}</td>
-            <a href="{% url 'orders:detail' o.pk %}">Open</a> |
+          <td>
             <a href="{% url 'orders:delete' o.pk %}">Delete</a>
           </td>
         </tr>
       {% empty %}
-        <tr><td colspan="5">No orders yet.</td></tr>
+        <tr><td colspan="6">No orders yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>

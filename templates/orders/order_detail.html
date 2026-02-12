@@ -76,4 +76,32 @@
 <strong>Subtotal:</strong> {{ order.subtotal }}
 </p>
 
+<script>
+  async function fetchPrice(productId) {
+    const resp = await fetch(`/products/${productId}/price/`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.price;
+  }
+
+  document.addEventListener("change", async (e) => {
+    if (!e.target.name || !e.target.name.endsWith("-product")) return;
+
+    const productId = e.target.value;
+    if (!productId) return;
+
+    // Find the matching unit_price field in the same form row
+    const unitPriceName = e.target.name.replace("-product", "-unit_price");
+    const unitPriceInput = document.querySelector(`input[name="${unitPriceName}"]`);
+    if (!unitPriceInput) return;
+
+    // Only auto-fill if empty (don’t overwrite manual edits)
+    if (unitPriceInput.value && unitPriceInput.value.trim() !== "") return;
+
+    const price = await fetchPrice(productId);
+    if (price) unitPriceInput.value = price;
+  });
+</script>
+
+
 {% endblock %}

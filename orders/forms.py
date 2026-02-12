@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
+from decimal import Decimal
 
 from .models import Order, OrderItem
 
@@ -11,7 +12,6 @@ class OrderForm(forms.ModelForm):
 
 
 class OrderItemForm(forms.ModelForm):
-    # Let user omit unit_price; we’ll default from Product.price
     unit_price = forms.DecimalField(max_digits=12, decimal_places=2, required=False)
 
     class Meta:
@@ -23,16 +23,17 @@ class OrderItemForm(forms.ModelForm):
         product = cleaned.get("product")
         unit_price = cleaned.get("unit_price")
 
-        if product and unit_price in (None, ""):
+        # If user leaves unit_price blank, default from product.price
+        if product and (unit_price is None):
             cleaned["unit_price"] = product.price
 
         return cleaned
 
 
 OrderItemFormSet = inlineformset_factory(
-    parent_model=Order,
-    model=OrderItem,
+    Order,
+    OrderItem,
     form=OrderItemForm,
-    extra=1,          # show 1 blank line item row
-    can_delete=True,  # allow removing items
+    extra=1,
+    can_delete=True,
 )
