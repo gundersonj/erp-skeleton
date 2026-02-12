@@ -13,9 +13,9 @@ Core entities:
 
 Relationships:
 
-- Customer 1 ── * Order
-- Order 1 ── * OrderItem
-- Product 1 ── * OrderItem
+- Customer 1 -> * Order
+- Order 1 -> * OrderItem
+- Product 1 -> * OrderItem
 
 Deletion rules (important):
 
@@ -23,7 +23,7 @@ Deletion rules (important):
 - Deleting a **Product** is blocked if it appears in OrderItems (**PROTECT**)
 - Deleting an **Order** deletes its OrderItems (**CASCADE**)
 
-> Note: Primary key type is Django’s configured default (`DEFAULT_AUTO_FIELD`) — typically `BigAutoField` in newer projects.
+> Note: Primary key type is Django's configured default (`DEFAULT_AUTO_FIELD`) - typically `BigAutoField` in newer projects.
 
 ---
 
@@ -31,8 +31,8 @@ Deletion rules (important):
 
 ```
 CUSTOMER (customers_customer)
-  1 ───────< ORDER (orders_order)
-               1 ───────< ORDER_ITEM (orders_orderitem) >────── 1 PRODUCT (products_product)
+  1 --------< ORDER (orders_order)
+               1 --------< ORDER_ITEM (orders_orderitem) >-------- 1 PRODUCT (products_product)
 ```
 
 ---
@@ -41,15 +41,15 @@ CUSTOMER (customers_customer)
 
 ### customers_customer
 
-| Column      | Type        | Constraints / Notes |
-|-------------|-------------|---------------------|
-| id          | PK          | AutoField/BigAutoField |
-| name        | varchar(255)| required |
+| Column      | Type          | Constraints / Notes |
+|-------------|---------------|---------------------|
+| id          | PK            | AutoField/BigAutoField |
+| name        | varchar(255)  | required |
 | email       | email/varchar | nullable, unique (if configured unique=True) |
-| phone       | varchar(50) | blank allowed |
-| notes       | text        | blank allowed |
-| created_at  | datetime    | auto_now_add |
-| updated_at  | datetime    | auto_now |
+| phone       | varchar(50)   | blank allowed |
+| notes       | text          | blank allowed |
+| created_at  | datetime      | auto_now_add |
+| updated_at  | datetime      | auto_now |
 
 Indexes / Constraints:
 - `email` unique (only if you set `unique=True`)
@@ -78,7 +78,7 @@ Indexes / Constraints:
 | Column      | Type          | Constraints / Notes |
 |-------------|---------------|---------------------|
 | id          | PK            | AutoField/BigAutoField |
-| customer_id | FK            | → customers_customer.id, on_delete=PROTECT |
+| customer_id | FK            | -> customers_customer.id, on_delete=PROTECT |
 | status      | varchar(20)   | choices, default `DRAFT` |
 | order_date  | date          | auto_now_add |
 | created_at  | datetime      | auto_now_add |
@@ -100,8 +100,8 @@ Indexes / Constraints:
 | Column      | Type          | Constraints / Notes |
 |-------------|---------------|---------------------|
 | id          | PK            | AutoField/BigAutoField |
-| order_id    | FK            | → orders_order.id, on_delete=CASCADE |
-| product_id  | FK            | → products_product.id, on_delete=PROTECT |
+| order_id    | FK            | -> orders_order.id, on_delete=CASCADE |
+| product_id  | FK            | -> products_product.id, on_delete=PROTECT |
 | quantity    | integer       | positive, default 1 |
 | unit_price  | decimal(12,2) | required (often defaulted from product.price in forms/UI) |
 | created_at  | datetime      | auto_now_add |
